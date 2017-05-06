@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_home"
+              android:icon="@mipmap/home"
+              android:title="主界面"></item>
+        <item android:id="@+id/nav_down"
+              android:icon="@mipmap/down"
+              android:title="我的下载"/>
+        <item android:title="我的收藏"
+              android:id="@+id/nav_love"
+              android:icon="@mipmap/star"/>
+    </group>
+</menu>
