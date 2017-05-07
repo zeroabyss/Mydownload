@@ -6,4 +6,5 @@ package zero.okhttp_piccaso_recyclerview;
 
 public class test {
     public int a;
+    public int b;
 }
