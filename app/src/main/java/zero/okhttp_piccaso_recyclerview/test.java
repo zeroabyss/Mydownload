@@ -5,6 +5,13 @@ package zero.okhttp_piccaso_recyclerview;
  */
 
 public class test {
-    public int a;
-    public int b;
+    public int c;
+
+    public int getC() {
+        return c;
+    }
+
+    public void setC(int c) {
+        this.c = c;
+    }
 }
