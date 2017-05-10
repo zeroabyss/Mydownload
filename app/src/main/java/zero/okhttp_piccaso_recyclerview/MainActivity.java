@@ -3,6 +3,8 @@ package zero.okhttp_piccaso_recyclerview;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,9 +30,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
+import org.litepal.LitePal;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import zero.okhttp_piccaso_recyclerview.database.My_Down;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -48,7 +54,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        ActionBar actionBar=getSupportActionBar();
+        if (actionBar!=null){
+            actionBar.setHomeAsUpIndicator(R.mipmap.home);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        final NavigationView navigationView= (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.nav_home:
+                        drawerLayout.closeDrawers();
+                        break;
+                    default:
 
+                }
+                return true;
+            }
+        });
+
+        LitePal.getDatabase();
         startTask();
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -76,9 +102,10 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         re = (RecyclerView) findViewById(R.id.re);
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-        re.setLayoutManager(new GridLayoutManager(this,3));
-//        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
+        re.setLayoutManager(new GridLayoutManager(MainActivity.this,3));
+        toolbar= (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
+        drawerLayout= (DrawerLayout) findViewById(R.id.drawer);
     }
 
     private void setAdapter(){
@@ -101,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar,menu);
         return true;
     }
-/*
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -118,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return true;
-    }*/
+    }
 
     private void startTask(){
         OkHttpUtils.getInstance().getBeanOfOk(this, URL, TestBean.class, new OkHttpUtils.CallBack<TestBean>() {
@@ -130,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, list.get(0).getID()+"" );
                     initHeights();
                     setAdapter();
+
+
                 }
             }
         });
@@ -173,6 +202,12 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     String path=list.get(position).getWallPaperDownloadPath();
                     String name=list.get(position).getPicName();
+                    My_Down my_down=new My_Down();
+                    my_down.setName(list.get(position).getPicName());
+                    my_down.setUrl(list.get(position).getWallPaperDownloadPath());
+                    Log.e(TAG, list.get(position).getPicName() );
+                    Log.e(TAG, list.get(position).getWallPaperDownloadPath());
+                    my_down.save();
                     MyIntentService.newInstance(MainActivity.this,path,name);
                 }
             });
