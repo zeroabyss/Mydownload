@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import zero.okhttp_piccaso_recyclerview.Nav.Nav_down;
 import zero.okhttp_piccaso_recyclerview.database.My_Down;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.nav_home:
                         drawerLayout.closeDrawers();
+                        break;
+                    case R.id.nav_down:
+                        Nav_down.newInstance(MainActivity.this);
                         break;
                     default:
 
