@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -177,10 +178,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
-//            RecyclerView.LayoutParams params= (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
-//            params.height=heights.get(position);
-//            holder.itemView.setLayoutParams(params);
-           // holder.a.setText(list.get(position).getPicName());
+
+            holder.button.setVisibility(View.VISIBLE);
            Glide.with(MainActivity.this)
                     .load(list.get(position).getWallPaperMiddle())
                     .placeholder(R.mipmap.down)
@@ -227,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
           class ViewHolder extends RecyclerView.ViewHolder {
             CardView cardView;
             ImageView imageView;
-            TextView a;
             Button button;
 
             public ViewHolder(View itemView) {
@@ -236,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView= (ImageView) itemView.findViewById(R.id.item);
                // a= (TextView) itemView.findViewById(R.id.tv);
                 button= (Button) itemView.findViewById(R.id.down);
+
             }
         }
     }

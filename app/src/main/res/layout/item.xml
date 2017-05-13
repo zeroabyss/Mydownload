@@ -19,17 +19,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
                     android:scaleType="centerCrop"
+
                     />
                 <Button
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:textSize="12sp"
                     android:id="@+id/down"
                     android:text="下载"
                     android:layout_gravity="center"
+                    android:gravity="center_horizontal|top"
+                    android:padding="7dp"
+                    android:visibility="gone"
+
                     />
-
-
         </LinearLayout>
 
 </android.support.v7.widget.CardView>
