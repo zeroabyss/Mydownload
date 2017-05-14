@@ -81,16 +81,14 @@ public class MyIntentService extends IntentService {
                 inputStream=response.body().byteStream();
                 Bitmap bitmap= BitmapFactory.decodeStream(inputStream);
                 file=new File(sdPath+"/"+name);
-                fileOutputStream=new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100,fileOutputStream);
-                insertImageToSystemGallery(MyIntentService.this,file.getPath(),bitmap);
-                Handler handler=new Handler(getMainLooper());
+                fileOutputStream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                insertImageToSystemGallery(MyIntentService.this, file.getPath(), bitmap);
+                Handler handler = new Handler(getMainLooper());
                 handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MyIntentService.this,"下载完成",Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void run() {Toast.makeText(MyIntentService.this, "下载完成", Toast.LENGTH_SHORT).show();}
+                    });
             }
         } catch (Exception e){
              e.printStackTrace();

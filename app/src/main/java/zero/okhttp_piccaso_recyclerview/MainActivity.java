@@ -3,6 +3,7 @@ package zero.okhttp_piccaso_recyclerview;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,6 +35,7 @@ import com.squareup.picasso.Picasso;
 
 import org.litepal.LitePal;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -178,10 +180,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
 
             holder.button.setVisibility(View.VISIBLE);
-            holder.like.setVisibility(View.VISIBLE);
+            holder.likeButton.setVisibility(View.VISIBLE);
            Glide.with(MainActivity.this)
                     .load(list.get(position).getWallPaperMiddle())
                     .placeholder(R.mipmap.down)
@@ -207,14 +209,32 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     String path=list.get(position).getWallPaperDownloadPath();
                     String name=list.get(position).getPicName();
-                    My_Down my_down=new My_Down();
-                    my_down.setName(list.get(position).getPicName());
-                    my_down.setUrl(list.get(position).getWallPaperDownloadPath());
-                    Log.e(TAG, list.get(position).getPicName() );
-                    Log.e(TAG, list.get(position).getWallPaperDownloadPath());
-                    my_down.save();
-                    MyIntentService.newInstance(MainActivity.this,path,name);
+                    File file=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/"+name);
+                    if (file.exists()){
+                        Toast.makeText(MainActivity.this,"文件已存在",Toast.LENGTH_SHORT).show();
+                    }else {
+                        My_Down my_down = new My_Down();
+                        my_down.setName(list.get(position).getPicName());
+                        my_down.setUrl(list.get(position).getWallPaperDownloadPath());
+                        Log.e(TAG, list.get(position).getPicName());
+                        Log.e(TAG, list.get(position).getWallPaperDownloadPath());
+                        my_down.save();
+                        MyIntentService.newInstance(MainActivity.this, path, name);
+                    }
                 }
+            });
+            holder.likeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                if (holder.like) {
+                    holder.likeButton.setImageResource(R.mipmap.unlike);
+                    holder.like=false;
+                }else {
+                    holder.likeButton.setImageResource(R.mipmap.like);
+                    holder.like=true;
+                }
+                }
+
             });
 
 
@@ -229,14 +249,15 @@ public class MainActivity extends AppCompatActivity {
             CardView cardView;
             ImageView imageView;
             Button button;
-            ImageButton like;
+            ImageButton likeButton;
+              Boolean like=false;
             public ViewHolder(View itemView) {
                 super(itemView);
                 cardView= (CardView) itemView;
                 imageView= (ImageView) itemView.findViewById(R.id.item);
                // a= (TextView) itemView.findViewById(R.id.tv);
                 button= (Button) itemView.findViewById(R.id.down);
-                like= (ImageButton) itemView.findViewById(R.id.like);
+                likeButton= (ImageButton) itemView.findViewById(R.id.like);
             }
         }
     }
