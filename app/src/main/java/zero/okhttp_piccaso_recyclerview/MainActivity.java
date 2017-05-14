@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String photoUrl=list.get(position).getWallPaperDownloadPath();
-                    Intent i=Detail_View.newInstants(MainActivity.this,photoUrl);
+                    Intent i=Detail_View.newInstants(MainActivity.this,photoUrl,"MainActivity");
                     startActivity(i);
                 }
             });

@@ -25,6 +25,7 @@ import java.util.EventListener;
 import java.util.List;
 import java.util.zip.Inflater;
 
+import zero.okhttp_piccaso_recyclerview.Detail_View;
 import zero.okhttp_piccaso_recyclerview.R;
 import zero.okhttp_piccaso_recyclerview.database.My_Down;
 
@@ -79,15 +80,21 @@ public class Nav_down extends AppCompatActivity {
             ViewGroup.LayoutParams lp=holder.imageView.getLayoutParams();
             lp.height=params.height;
             holder.itemView.setLayoutParams(lp);
-
-            File file=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                +"/"+list.get(position).getName());
+            final String sdPath=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    +"/"+list.get(position).getName();
+            File file=new File(sdPath);
             Glide.with(Nav_down.this)
                     .load(file)
                     .placeholder(R.mipmap.down)
                     .error(R.mipmap.ic_launcher)
                     .into(holder.imageView);
-
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Detail_View().newInstants(Nav_down.this,sdPath,TAG);
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override
