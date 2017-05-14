@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, final int position) {
 
             holder.button.setVisibility(View.VISIBLE);
+            holder.like.setVisibility(View.VISIBLE);
            Glide.with(MainActivity.this)
                     .load(list.get(position).getWallPaperMiddle())
                     .placeholder(R.mipmap.down)
@@ -227,14 +229,14 @@ public class MainActivity extends AppCompatActivity {
             CardView cardView;
             ImageView imageView;
             Button button;
-
+            ImageButton like;
             public ViewHolder(View itemView) {
                 super(itemView);
                 cardView= (CardView) itemView;
                 imageView= (ImageView) itemView.findViewById(R.id.item);
                // a= (TextView) itemView.findViewById(R.id.tv);
                 button= (Button) itemView.findViewById(R.id.down);
-
+                like= (ImageButton) itemView.findViewById(R.id.like);
             }
         }
     }
