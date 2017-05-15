@@ -34,14 +34,17 @@ import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import zero.okhttp_piccaso_recyclerview.Like.Nav_Like;
 import zero.okhttp_piccaso_recyclerview.Nav.Nav_down;
 import zero.okhttp_piccaso_recyclerview.database.My_Down;
+import zero.okhttp_piccaso_recyclerview.database.My_Like;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         initView();
         ActionBar actionBar=getSupportActionBar();
         if (actionBar!=null){
-            actionBar.setHomeAsUpIndicator(R.mipmap.home);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_draweropen);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         final NavigationView navigationView= (NavigationView) findViewById(R.id.navigation_view);
@@ -74,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_down:
                         Nav_down.newInstance(MainActivity.this);
+                        break;
+                    case R.id.nav_love:
+                        Nav_Like.newInstance(MainActivity.this);
                         break;
                     default:
 
@@ -143,9 +149,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.backup:
                 Toast.makeText(MainActivity.this,"backup",Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.delete:
-                Toast.makeText(MainActivity.this,"delete",Toast.LENGTH_SHORT).show();
-                break;
+
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
@@ -226,15 +230,36 @@ public class MainActivity extends AppCompatActivity {
             holder.likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                if (holder.like) {
-                    holder.likeButton.setImageResource(R.mipmap.unlike);
-                    holder.like=false;
-                }else {
-                    holder.likeButton.setImageResource(R.mipmap.like);
-                    holder.like=true;
+                    //like是有收藏
+                    if (holder.like) {
+                        holder.likeButton.setImageResource(R.mipmap.unlike);
+                        holder.like=false;
+                        My_Like my_like=new My_Like();
+                        my_like.setToDefault("love");
+                        my_like.updateAll("name = ? ",list.get(position).getPicName());
+                    }
+                    //没有收藏
+                    else {
+                        holder.likeButton.setImageResource(R.mipmap.like);
+                        holder.like=true;
+                        List<My_Like> likes=DataSupport.where("name = ?",list.get(position).getPicName()).find(My_Like.class);
+                        //在数据库里面没有这个。
+                        if (likes.size()==0){
+                            My_Like my_like = new My_Like();
+                            my_like.setName(list.get(position).getPicName());
+                            my_like.setUrl(list.get(position).getWallPaperDownloadPath());
+                            my_like.setLove(true);
+                            my_like.save();
+                        }else if(likes.size()==1) {
+                            //数据库里有
+                            My_Like my_like=new My_Like();
+                            my_like.setLove(true);
+                            my_like.updateAll("name = ? ",list.get(position).getPicName());
+                        }else {
+                            Log.e(TAG, "出现意外错误" );
+                        }
+                    }
                 }
-                }
-
             });
 
 

@@ -106,7 +106,8 @@ public class MyIntentService extends IntentService {
         }
     }
     public static void insertImageToSystemGallery(Context context, String filePath, Bitmap bitmap){
-        MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "", "");
+        //bitmap存储SD中
+        // MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "", "");
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri uri = Uri.fromFile(new File(filePath));
         intent.setData(uri);
