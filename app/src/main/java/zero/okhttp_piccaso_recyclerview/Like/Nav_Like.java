@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,17 @@ public class Nav_Like extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_down);
+        Toolbar toolbar= (Toolbar) findViewById(R.id.nav_down_toolbar);
+        toolbar.setTitle("我的收藏");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
         LitePal.getDatabase();
         recyclerView= (RecyclerView) findViewById(R.id.nav_down_recyclerview);
         list= DataSupport.where("love = ?","1").find(My_Like.class);

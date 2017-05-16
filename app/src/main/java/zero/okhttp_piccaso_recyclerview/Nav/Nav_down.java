@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class Nav_down extends AppCompatActivity {
     private RecyclerView re;
     private NavAdapter adapter;
     private List<My_Down> list=new ArrayList<>();
+    private Toolbar toolbar;
     public static void newInstance(Context context){
         Intent i=new Intent(context,Nav_down.class);
         context.startActivity(i);
@@ -43,6 +45,16 @@ public class Nav_down extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_down);
         Log.e(TAG, "onCreate: ");
+        toolbar= (Toolbar) findViewById(R.id.nav_down_toolbar);
+        toolbar.setTitle("我的下载");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         LitePal.getDatabase();
         List<My_Down> allDownUrl=DataSupport.findAll(My_Down.class);
         for (My_Down my_down:allDownUrl){

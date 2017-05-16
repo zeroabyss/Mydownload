@@ -1,11 +1,15 @@
 package zero.okhttp_piccaso_recyclerview;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -56,11 +60,30 @@ public class MainActivity extends AppCompatActivity {
     private Myadapter adapter;
     private static  String URL="http://bz.budejie.com/?typeid=2&ver=3.4.3&no_cry=1&client=android&c=wallPaper&a=random&bigid=0";
     private SwipeRefreshLayout swipeRefreshLayout;
+    private static final int REQUESTCODE_PERMISSION=1;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case REQUESTCODE_PERMISSION:
+                if (grantResults[0]==PackageManager.PERMISSION_GRANTED
+                        &&grantResults.length>0){
+
+                }else{
+                    Toast.makeText(this,"申请权限失败",Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUESTCODE_PERMISSION);
+        }
+
         initView();
         ActionBar actionBar=getSupportActionBar();
         if (actionBar!=null){
@@ -146,10 +169,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.backup:
-                Toast.makeText(MainActivity.this,"backup",Toast.LENGTH_SHORT).show();
-                break;
-
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
