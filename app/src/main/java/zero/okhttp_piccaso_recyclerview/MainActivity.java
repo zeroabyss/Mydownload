@@ -52,9 +52,19 @@ public class MainActivity extends AppCompatActivity {
     private List<Integer> heights=new ArrayList<>();
     private RecyclerView re;
     private Myadapter adapter;
+    private NavigationView navigationView;
     private static  String URL="http://bz.budejie.com/?typeid=2&ver=3.4.3&no_cry=1&client=android&c=wallPaper&a=random&bigid=0";
     private SwipeRefreshLayout swipeRefreshLayout;
     private static final int REQUESTCODE_PERMISSION=1;
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+       /* if (navigationView.getVisibility()==View.VISIBLE){*/
+            drawerLayout.closeDrawers();
+        }else
+            super.onBackPressed();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -81,12 +91,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         initView();
+       // drawerLayout.setFocusableInTouchMode(false);
         ActionBar actionBar=getSupportActionBar();
         if (actionBar!=null){
             actionBar.setHomeAsUpIndicator(R.drawable.ic_draweropen);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        final NavigationView navigationView= (NavigationView) findViewById(R.id.navigation_view);
+        navigationView= (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
