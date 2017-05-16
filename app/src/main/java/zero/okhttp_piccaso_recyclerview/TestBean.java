@@ -55,6 +55,15 @@ public class TestBean {
             private int ID;
             private String PicName;
             private String tags;
+            private Boolean love=false;
+
+            public Boolean getLove() {
+                return love;
+            }
+
+            public void setLove(Boolean love) {
+                this.love = love;
+            }
 
             public String getPicName() {
                 return PicName;

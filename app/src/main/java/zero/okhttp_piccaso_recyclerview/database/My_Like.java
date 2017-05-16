@@ -11,6 +11,15 @@ public class My_Like extends DataSupport {
     private String name;
     private String url;
     private Boolean love;
+    private int listPosition;
+
+    public int getListPosition() {
+        return listPosition;
+    }
+
+    public void setListPosition(int listPosition) {
+        this.listPosition = listPosition;
+    }
 
     public int getId() {
         return id;

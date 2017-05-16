@@ -29,6 +29,7 @@ import java.util.List;
 import zero.okhttp_piccaso_recyclerview.Detail_View;
 import zero.okhttp_piccaso_recyclerview.MainActivity;
 import zero.okhttp_piccaso_recyclerview.MyIntentService;
+import zero.okhttp_piccaso_recyclerview.OnItemListen;
 import zero.okhttp_piccaso_recyclerview.R;
 import zero.okhttp_piccaso_recyclerview.database.My_Down;
 import zero.okhttp_piccaso_recyclerview.database.My_Like;
@@ -38,15 +39,18 @@ public class Nav_Like extends AppCompatActivity {
     private static final String TAG = "Nav_Like";
     private Adapter adapter;
     private List<My_Like> list=new ArrayList<>();
+    private static OnItemListen onItemListen;
 
-    public static void newInstance(Context context){
+    public static void newInstance(Context context,OnItemListen onItem){
         Intent intent=new Intent(context,Nav_Like.class);
         context.startActivity(intent);
+        onItemListen=onItem;
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_down);
+        Log.e(TAG, Nav_Like.this+"" );
         Toolbar toolbar= (Toolbar) findViewById(R.id.nav_down_toolbar);
         toolbar.setTitle("我的收藏");
         setSupportActionBar(toolbar);
@@ -123,12 +127,16 @@ public class Nav_Like extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     //like是有收藏
+                    List<My_Like> mylike=DataSupport.where("name = ? ",list.get(position).getName()).find(My_Like.class);
                     if (holder.like) {
                         holder.likeButton.setImageResource(R.mipmap.unlike);
                         holder.like=false;
                         My_Like my_like=new My_Like();
                         my_like.setToDefault("love");
                         my_like.updateAll("name = ? ",list.get(position).getName());
+                        onItemListen.change(mylike.get(0).getListPosition(),false,mylike.get(0).getName());
+                        Log.e(TAG,mylike.get(0).getListPosition()+"");
+                        Log.e(TAG,mylike.get(0).getName() );
                     }
                     //没有收藏
                     else {
@@ -142,11 +150,17 @@ public class Nav_Like extends AppCompatActivity {
                             my_like.setUrl(list.get(position).getUrl());
                             my_like.setLove(true);
                             my_like.save();
+                            onItemListen.change(mylike.get(0).getListPosition(),true,mylike.get(0).getName());
+                            Log.e(TAG,mylike.get(0).getListPosition()+"");
+                            Log.e(TAG,mylike.get(0).getName() );
                         }else if(likes.size()==1) {
                             //数据库里有
                             My_Like my_like=new My_Like();
                             my_like.setLove(true);
                             my_like.updateAll("name = ? ",list.get(position).getName());
+                            onItemListen.change(mylike.get(0).getListPosition(),true,mylike.get(0).getName());
+                            Log.e(TAG,mylike.get(0).getListPosition()+"");
+                            Log.e(TAG,mylike.get(0).getName() );
                         }else {
                             Log.e(TAG, "出现意外错误" );
                         }
