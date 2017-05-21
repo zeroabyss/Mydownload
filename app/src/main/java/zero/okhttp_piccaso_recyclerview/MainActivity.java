@@ -2,10 +2,12 @@ package zero.okhttp_piccaso_recyclerview;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import zero.okhttp_piccaso_recyclerview.Like.Nav_Like;
+import zero.okhttp_piccaso_recyclerview.Nav.Nav_Like;
 import zero.okhttp_piccaso_recyclerview.Nav.Nav_down;
 import zero.okhttp_piccaso_recyclerview.database.My_Down;
 import zero.okhttp_piccaso_recyclerview.database.My_Like;
@@ -56,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
     private static  String URL="http://bz.budejie.com/?typeid=2&ver=3.4.3&no_cry=1&client=android&c=wallPaper&a=random&bigid=0";
     private SwipeRefreshLayout swipeRefreshLayout;
     private static final int REQUESTCODE_PERMISSION=1;
+    private FloatingActionButton fab;
+    private MyBroadcast myBroadcast;
+    private IntentFilter filter;
 
     @Override
     public void onBackPressed() {
@@ -81,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myBroadcast);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -90,7 +101,22 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUESTCODE_PERMISSION);
         }
 
+
         initView();
+        LitePal.getDatabase();
+        startTask();
+        //设置广播接收MyIntentService的回调
+        filter=new IntentFilter();
+        filter.addAction(MyBroadcast.BROADCAST_NAME);
+        myBroadcast=new MyBroadcast();
+        registerReceiver(myBroadcast,filter);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               refreshRe();
+            }
+        });
        // drawerLayout.setFocusableInTouchMode(false);
         ActionBar actionBar=getSupportActionBar();
         if (actionBar!=null){
@@ -128,27 +154,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        LitePal.getDatabase();
-        startTask();
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                OkHttpUtils.getInstance().getBeanOfOk(MainActivity.this, URL, TestBean.class
-                        , new OkHttpUtils.CallBack<TestBean>() {
-                            @Override
-                            public void getData(TestBean testBean) {
-                                if (testBean.getData()!=null){
-                                    list.clear();
-                                    list.addAll(testBean.getData().getWallpaperListInfo());
-                                    Toast.makeText(MainActivity.this,"刷新成功",Toast.LENGTH_SHORT).show();
-                                    adapter.notifyDataSetChanged();
-                                    swipeRefreshLayout.setRefreshing(false);
-                                }else {
-                                    Toast.makeText(MainActivity.this,"刷新失败",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+               refreshRe();
             }
         });
     }
@@ -160,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar= (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         drawerLayout= (DrawerLayout) findViewById(R.id.drawer);
+        fab= (FloatingActionButton) findViewById(R.id.floatAction);
     }
 
     private void setAdapter(){
@@ -179,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar,menu);
+        getMenuInflater().inflate(R.menu.nulltoolbar,menu);
         return true;
     }
 
@@ -205,8 +216,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, list.get(0).getID()+"" );
                     initHeights();
                     setAdapter();
-
-
                 }
             }
         });
@@ -332,7 +341,24 @@ public class MainActivity extends AppCompatActivity {
                 likeButton= (ImageButton) itemView.findViewById(R.id.like);
             }
         }
-    }
 
+    }
+    private void refreshRe(){
+        OkHttpUtils.getInstance().getBeanOfOk(MainActivity.this, URL, TestBean.class
+                , new OkHttpUtils.CallBack<TestBean>() {
+                    @Override
+                    public void getData(TestBean testBean) {
+                        if (testBean.getData()!=null){
+                            list.clear();
+                            list.addAll(testBean.getData().getWallpaperListInfo());
+                            Toast.makeText(MainActivity.this,"刷新成功",Toast.LENGTH_SHORT).show();
+                            adapter.notifyDataSetChanged();
+                            swipeRefreshLayout.setRefreshing(false);
+                        }else {
+                            Toast.makeText(MainActivity.this,"刷新失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 }
 

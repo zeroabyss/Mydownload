@@ -1,4 +1,4 @@
-package zero.okhttp_piccaso_recyclerview.Like;
+package zero.okhttp_piccaso_recyclerview.Nav;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zero.okhttp_piccaso_recyclerview.Detail_View;
-import zero.okhttp_piccaso_recyclerview.MainActivity;
 import zero.okhttp_piccaso_recyclerview.MyIntentService;
 import zero.okhttp_piccaso_recyclerview.OnItemListen;
 import zero.okhttp_piccaso_recyclerview.R;

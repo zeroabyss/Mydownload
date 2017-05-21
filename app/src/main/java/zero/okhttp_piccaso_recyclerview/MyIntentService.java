@@ -84,11 +84,15 @@ public class MyIntentService extends IntentService {
                 fileOutputStream = new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                 insertImageToSystemGallery(MyIntentService.this, file.getPath(), bitmap);
-                Handler handler = new Handler(getMainLooper());
+            /*    Handler handler = new Handler(getMainLooper());
                 handler.post(new Runnable() {
                         @Override
                         public void run() {Toast.makeText(MyIntentService.this, "下载完成", Toast.LENGTH_SHORT).show();}
                     });
+            */
+            //发送广播给activity弹出Toast：下载完成
+                Intent i=new Intent(MyBroadcast.BROADCAST_NAME);
+                sendBroadcast(i);
             }
         } catch (Exception e){
              e.printStackTrace();

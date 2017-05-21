@@ -8,28 +8,46 @@
     android:id="@+id/drawer"
     android:background="#808080"
     >
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/main_layout">
-        <android.support.v7.widget.Toolbar
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:id="@+id/main_toolbar">
-        </android.support.v7.widget.Toolbar>
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:id="@+id/main_toolbar"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/swiperefresh">
+            android:id="@+id/swiperefresh"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/re"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+               >
             </android.support.v7.widget.RecyclerView>
         </android.support.v4.widget.SwipeRefreshLayout>
-    </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/floatAction"
+            android:src="@drawable/refreshaction"
+            app:backgroundTint="#fff"
+            android:layout_gravity="bottom|end"
+            />
+    </android.support.design.widget.CoordinatorLayout>
     <android.support.design.widget.NavigationView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,7 +55,6 @@
         android:layout_gravity="start"
         app:menu="@menu/nav_menu"
         app:headerLayout="@layout/nav_header">
-
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
