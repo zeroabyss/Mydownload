@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -349,11 +350,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void getData(TestBean testBean) {
                         if (testBean.getData()!=null){
+                            re.smoothScrollToPosition(0);
                             list.clear();
                             list.addAll(testBean.getData().getWallpaperListInfo());
                             Toast.makeText(MainActivity.this,"刷新成功",Toast.LENGTH_SHORT).show();
                             adapter.notifyDataSetChanged();
                             swipeRefreshLayout.setRefreshing(false);
+                          //toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
                         }else {
                             Toast.makeText(MainActivity.this,"刷新失败",Toast.LENGTH_SHORT).show();
                         }
